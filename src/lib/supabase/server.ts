@@ -1,0 +1,23 @@
+import "server-only";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { supabaseConfig } from "@/lib/app-mode";
+import type { Database } from "@/lib/supabase/database.types";
+
+export async function createSupabaseServer() {
+  const config = supabaseConfig();
+  if (!config) return null;
+  const store = await cookies();
+  return createServerClient<Database>(config.url, config.key, {
+    cookies: {
+      getAll: () => store.getAll(),
+      setAll(values) {
+        try {
+          values.forEach(({ name, value, options }) => store.set(name, value, options));
+        } catch {
+          // Server Components cannot write cookies; proxy refreshes them first.
+        }
+      },
+    },
+  });
+}

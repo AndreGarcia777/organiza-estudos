@@ -1,0 +1,12 @@
+# Arquivos de desenvolvimento e documentação que não integram a aplicação publicada
+.env*
+*.tsbuildinfo
+artifacts/
+coverage/
+docs/
+integration/
+scripts/
+/supabase/
+tests/
+*.md
+playwright*.ts
